@@ -1,0 +1,17 @@
+# =============================================================================
+# Llaves SSH Públicas de Administradores
+# =============================================================================
+# Agrega una llave pública por línea
+# Las líneas que comienzan con # son ignoradas
+# 
+# Para obtener tu llave pública:
+#   cat ~/.ssh/id_rsa.pub
+#
+# Para generar una nueva:
+#   ssh-keygen -t rsa -b 4096 -C "tu-email@example.com"
+# =============================================================================
+
+# Ejemplo de llave SSH (reemplaza con tus llaves reales):
+# ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDExample1... admin1@laptop
+# ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDExample2... admin2@desktop
+# ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExample3... admin3@macbook
