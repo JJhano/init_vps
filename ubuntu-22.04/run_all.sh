@@ -8,6 +8,8 @@
 #   ./run_all.sh                    - Ejecuta todos los scripts
 #   ./run_all.sh --start 02         - Inicia desde el script 02
 #   ./run_all.sh --skip 01,03       - Salta los scripts 01 y 03
+#   ./run_all.sh --panel coolify    - Instala Coolify en lugar de ISPConfig
+#   ./run_all.sh --panel ispconfig  - Instala ISPConfig (por defecto)
 #   ./run_all.sh --start 02 --skip 03 - Inicia desde 02 y salta 03
 # =============================================================================
 
@@ -23,6 +25,7 @@ NC='\033[0m' # Sin color
 # Parámetros
 START_FROM=""
 SKIP_SCRIPTS=""
+PANEL_CHOICE=""
 
 # Procesar argumentos
 while [[ $# -gt 0 ]]; do
@@ -35,16 +38,23 @@ while [[ $# -gt 0 ]]; do
             SKIP_SCRIPTS="$2"
             shift 2
             ;;
+        --panel)
+            PANEL_CHOICE="$2"
+            shift 2
+            ;;
         --help|-h)
             echo "Uso: $0 [opciones]"
             echo ""
             echo "Opciones:"
-            echo "  --start <num>    Iniciar desde el script con número <num>"
-            echo "  --skip <nums>    Saltar scripts (números separados por comas)"
-            echo "  --help, -h       Mostrar esta ayuda"
+            echo "  --start <num>         Iniciar desde el script con número <num>"
+            echo "  --skip <nums>         Saltar scripts (números separados por comas)"
+            echo "  --panel <tipo>        Elegir panel de control: 'coolify' o 'ispconfig'"
+            echo "  --help, -h            Mostrar esta ayuda"
             echo ""
             echo "Ejemplos:"
-            echo "  $0                         - Ejecuta todos los scripts"
+            echo "  $0                         - Ejecuta todos los scripts (modo interactivo)"
+            echo "  $0 --panel coolify         - Instala Coolify"
+            echo "  $0 --panel ispconfig       - Instala ISPConfig"
             echo "  $0 --start 02              - Inicia desde 02_*.sh"
             echo "  $0 --skip 01,03            - Salta 01_*.sh y 03_*.sh"
             echo "  $0 --start 02 --skip 03    - Inicia desde 02 y salta 03"
@@ -57,6 +67,79 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+# =============================================================================
+# Selección de Panel de Control
+# =============================================================================
+
+# Si no se especificó panel, preguntar al usuario
+if [ -z "$PANEL_CHOICE" ]; then
+    echo "=============================================="
+    echo "  Selección de Panel de Control"
+    echo "=============================================="
+    echo ""
+    echo "Elige el panel de control a instalar:"
+    echo ""
+    echo "  1) ISPConfig - Panel completo de hosting con web, mail, DNS, FTP"
+    echo "  2) Coolify   - Plataforma moderna para self-hosting de aplicaciones"
+    echo "  3) Ninguno   - Solo configuración básica del servidor"
+    echo ""
+    read -p "Ingresa tu elección (1/2/3): " CHOICE
+    
+    case $CHOICE in
+        1)
+            PANEL_CHOICE="ispconfig"
+            ;;
+        2)
+            PANEL_CHOICE="coolify"
+            ;;
+        3)
+            PANEL_CHOICE="none"
+            ;;
+        *)
+            echo -e "${RED}Opción inválida. Saliendo.${NC}"
+            exit 1
+            ;;
+    esac
+fi
+
+# Configurar scripts a saltar según la elección
+case $PANEL_CHOICE in
+    ispconfig)
+        echo -e "${GREEN}Panel seleccionado: ISPConfig${NC}"
+        # Saltar Coolify
+        if [ -z "$SKIP_SCRIPTS" ]; then
+            SKIP_SCRIPTS="05"
+        else
+            SKIP_SCRIPTS="${SKIP_SCRIPTS},05"
+        fi
+        ;;
+    coolify)
+        echo -e "${GREEN}Panel seleccionado: Coolify${NC}"
+        # Saltar ISPConfig
+        if [ -z "$SKIP_SCRIPTS" ]; then
+            SKIP_SCRIPTS="06"
+        else
+            SKIP_SCRIPTS="${SKIP_SCRIPTS},06"
+        fi
+        ;;
+    none)
+        echo -e "${YELLOW}No se instalará ningún panel de control${NC}"
+        # Saltar ambos
+        if [ -z "$SKIP_SCRIPTS" ]; then
+            SKIP_SCRIPTS="05,06"
+        else
+            SKIP_SCRIPTS="${SKIP_SCRIPTS},05,06"
+        fi
+        ;;
+    *)
+        echo -e "${RED}Panel desconocido: $PANEL_CHOICE${NC}"
+        echo "Usa 'coolify', 'ispconfig', o 'none'"
+        exit 1
+        ;;
+esac
+
+echo ""
 
 # Verificar si la carpeta de scripts existe
 if [ ! -d "$SCRIPTS_DIR" ]; then
