@@ -249,9 +249,7 @@ for script in $SCRIPTS; do
         
         # Preguntar si continuar (solo si es interactivo)
         if [ -t 0 ]; then
-         Saltados: ${BLUE}$SKIPPED${NC}"
-echo -e "Ejecutados: $((TOTAL - SKIPPED))"
-echo -e "Exitosos: ${GREEN}$((TOTAL - SKIPPEDar con el siguiente script? (s/n): " CONTINUE
+            read -p "¿Deseas continuar con el siguiente script? (s/n): " CONTINUE
             if [ "$CONTINUE" != "s" ] && [ "$CONTINUE" != "S" ]; then
                 echo -e "${RED}Ejecución cancelada por el usuario.${NC}"
                 exit 1
