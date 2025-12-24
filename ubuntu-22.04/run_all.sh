@@ -110,27 +110,27 @@ case $PANEL_CHOICE in
         echo -e "${BLUE}ISPConfig incluye su propio servidor de email${NC}"
         # Saltar Coolify y Mailcow (ISPConfig ya trae email)
         if [ -z "$SKIP_SCRIPTS" ]; then
-            SKIP_SCRIPTS="05,07"
+            SKIP_SCRIPTS="06,08"
         else
-            SKIP_SCRIPTS="${SKIP_SCRIPTS},05,07"
+            SKIP_SCRIPTS="${SKIP_SCRIPTS},06,08"
         fi
         ;;
     coolify)
         echo -e "${GREEN}Panel seleccionado: Coolify${NC}"
         # Saltar ISPConfig (Mailcow se instalará para email)
         if [ -z "$SKIP_SCRIPTS" ]; then
-            SKIP_SCRIPTS="06"
+            SKIP_SCRIPTS="07"
         else
-            SKIP_SCRIPTS="${SKIP_SCRIPTS},06"
+            SKIP_SCRIPTS="${SKIP_SCRIPTS},07"
         fi
         ;;
     none)
         echo -e "${YELLOW}No se instalará ningún panel de control${NC}"
         # Saltar ambos paneles (Mailcow se instalará para email)
         if [ -z "$SKIP_SCRIPTS" ]; then
-            SKIP_SCRIPTS="05,06"
+            SKIP_SCRIPTS="06,07"
         else
-            SKIP_SCRIPTS="${SKIP_SCRIPTS},05,06"
+            SKIP_SCRIPTS="${SKIP_SCRIPTS},06,07"
         fi
         ;;
     *)

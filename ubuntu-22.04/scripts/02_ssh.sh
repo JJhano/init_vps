@@ -24,7 +24,7 @@ else
 fi
 
 # Valores por defecto si no están definidos en .env
-SSH_PORT="${SSH_PORT:-2222}"
+SSH_PORT="${SSH_PORT:-22}"
 SSH_ADMIN_KEYS="${SSH_ADMIN_KEYS:-}"
 SSH_GITHUB_KEY="${SSH_GITHUB_KEY:-}"
 SSH_DISABLE_PASSWORD="${SSH_DISABLE_PASSWORD:-yes}"
