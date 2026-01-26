@@ -212,16 +212,28 @@ echo "✓ Configuraciones de seguridad aplicadas"
 echo ""
 echo "[4/4] Reiniciando servicio SSH..."
 
+# Detectar el nombre del servicio SSH (sshd en Ubuntu 22.04, ssh en Ubuntu 24.04)
+if systemctl list-unit-files | grep -q "^sshd.service"; then
+    SSH_SERVICE="sshd"
+elif systemctl list-unit-files | grep -q "^ssh.service"; then
+    SSH_SERVICE="ssh"
+else
+    echo "ERROR: No se pudo detectar el servicio SSH"
+    exit 1
+fi
+
+echo "Servicio SSH detectado: $SSH_SERVICE"
+
 # Verificar configuración antes de reiniciar
 if sshd -t; then
     echo "✓ Configuración SSH válida"
-    systemctl restart sshd
+    systemctl restart "$SSH_SERVICE"
     echo "✓ Servicio SSH reiniciado"
 else
     echo "ERROR: La configuración SSH tiene errores"
     echo "Restaurando backup..."
     cp /etc/ssh/sshd_config.backup /etc/ssh/sshd_config
-    systemctl restart sshd
+    systemctl restart "$SSH_SERVICE"
     exit 1
 fi
 
